@@ -1,14 +1,14 @@
 import 'server-only'
+import { publicSiteUrl } from './supabase/env'
 
 // The public website is a separate Next.js app, so revalidatePath here can't clear its cache.
 // Ask it to refresh through its /api/revalidate route instead. Failures are only logged:
 // the save already succeeded, and the website still refreshes on its own within a few minutes.
 export async function revalidatePublicSite() {
-  const siteUrl = process.env.NEXT_PUBLIC_PUBLIC_SITE_URL
   const secret = process.env.REVALIDATE_SECRET
-  if (!siteUrl || !secret) return
+  if (!secret) return
   try {
-    const response = await fetch(new URL('/api/revalidate', siteUrl), {
+    const response = await fetch(new URL('/api/revalidate', publicSiteUrl), {
       method: 'POST',
       headers: { Authorization: `Bearer ${secret}` },
       cache: 'no-store',

@@ -230,9 +230,20 @@ export async function deleteBlogCategory(id: string) {
   if (!admin) redirect('/login')
   const { data: category } = await admin.supabase.from('blog_categories').select('name').eq('id', id).maybeSingle()
   if (!category) redirect('/blog/categories?error=Category%20not%20found%20or%20not%20permitted')
-  const { count } = await admin.supabase.from('blog_posts').select('id', { count: 'exact', head: true }).eq('category_id', id)
+  // GET with limit(0) instead of HEAD: HEAD responses hide errors, which would skip this check.
+  const { count, error: countError } = await admin.supabase.from('blog_posts').select('id', { count: 'exact' }).limit(0).eq('category_id', id)
+  if (countError) redirect(`/blog/categories?error=${encodeURIComponent(`Could not check which posts use this category: ${countError.message}`)}`)
   if (count) redirect(`/blog/categories?error=${encodeURIComponent(`“${category.name}” is used by ${count} post${count === 1 ? '' : 's'}. Move ${count === 1 ? 'it' : 'them'} to another category first.`)}`)
-  const { error } = await admin.supabase.from('blog_categories').delete().eq('id', id)
+  // select() returns the deleted rows: Row Level Security can silently delete nothing without an error.
+  const { data: deleted, error } = await admin.supabase.from('blog_categories').delete().eq('id', id).select('id')
+  if (error) {
+    console.error(`Blog category delete failed (${error.code}): ${error.message}`)
+    redirect(`/blog/categories?error=${encodeURIComponent(error.message)}`)
+  }
+  if (!deleted?.length) {
+    console.error(`Blog category delete removed no rows for ${id}: the database did not allow it (check admin_users and the blog_categories policies).`)
+    redirect(`/blog/categories?error=${encodeURIComponent('The database did not delete this category. Your account may not have permission. Ask the owner to check admin_users in Supabase.')}`)
+  }
   await revalidateBlog()
-  redirect(error ? `/blog/categories?error=${encodeURIComponent(error.message)}` : '/blog/categories?saved=category-deleted')
+  redirect('/blog/categories?saved=category-deleted')
 }

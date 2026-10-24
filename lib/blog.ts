@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PAGE_LINK_MESSAGE, isPageLink } from './image-url'
 
 // Mirrors public.blog_posts / public.blog_categories (supabase/migrations/009_blog.sql in the website project).
 export type BlogStatus = 'draft' | 'published' | 'scheduled'
@@ -63,6 +64,7 @@ export function fromIstInput(value: string) {
 const optionalText = (max: number) => z.string().trim().max(max, `Keep this under ${max} characters.`).transform((value) => value || null)
 const optionalImage = z.string().trim().transform((value) => value || null)
   .refine((value) => value === null || /^(\/|https:\/\/)/.test(value), 'Use an uploaded image, a path starting with /, or an https:// link.')
+  .refine((value) => !isPageLink(value), PAGE_LINK_MESSAGE)
 
 export const blogIntents = ['draft', 'publish', 'schedule', 'update'] as const
 export type BlogIntent = (typeof blogIntents)[number]

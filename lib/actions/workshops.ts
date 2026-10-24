@@ -135,7 +135,8 @@ export async function deleteRegistration(id: string, back: string) {
   if (!admin) redirect('/login')
   const returnTo = back.startsWith('/workshops/registrations') ? back : '/workshops/registrations'
   const join = returnTo.includes('?') ? '&' : '?'
-  const { error } = await admin.supabase.from('workshop_registrations').delete().eq('id', id)
+  // select() returns the deleted rows: Row Level Security can silently delete nothing without an error.
+  const { data, error } = await admin.supabase.from('workshop_registrations').delete().eq('id', id).select('id')
   await revalidateWorkshops()
-  redirect(error ? `${returnTo}${join}error=${encodeURIComponent(error.message)}` : `${returnTo}${join}saved=registration-deleted`)
+  redirect(error || !data?.length ? `${returnTo}${join}error=${encodeURIComponent(error?.message ?? 'Registration not found or not permitted')}` : `${returnTo}${join}saved=registration-deleted`)
 }

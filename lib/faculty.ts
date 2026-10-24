@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PAGE_LINK_MESSAGE, isPageLink } from './image-url'
 
 export const FACULTY_SECTIONS = ['director', 'head', 'trainer'] as const
 // Labels shown to admins. The stored value stays 'head' (the website filters on it).
@@ -32,7 +33,7 @@ export const facultySchema = z.object({
   experience: optionalText(100),
   bio: optionalText(2000),
   specialities: z.array(z.string().trim().min(1).max(120)).max(20),
-  image_url: z.string().trim().min(1, 'Enter an image path or URL.').regex(/^(\/|https:\/\/)/, 'Use a / path or an https:// URL.'),
+  image_url: z.string().trim().min(1, 'Enter an image path or URL.').regex(/^(\/|https:\/\/)/, 'Use a / path or an https:// URL.').refine((value) => !isPageLink(value), PAGE_LINK_MESSAGE),
   image_alt: optionalText(300),
   sort_order: z.coerce.number().int().min(0).max(100000),
   is_published: z.boolean(),

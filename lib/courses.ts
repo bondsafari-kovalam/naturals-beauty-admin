@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PAGE_LINK_MESSAGE, isPageLink } from './image-url'
 
 // Mirrors public.courses (supabase/migrations/002_courses.sql in naturals-beauty-web).
 export type CourseModule = { heading: string; topics: string[]; note?: string }
@@ -48,7 +49,8 @@ export const courseSchema = z.object({
   category: z.string().trim().min(1, 'Choose a category.').max(100),
   description: z.string().trim().min(1, 'Enter a description.').max(2000),
   duration: optionalText(60),
-  image_url: z.string().trim().min(1, 'Enter an image path or URL.').regex(/^(\/|https:\/\/)/, 'Use a path starting with / (an image in the website’s public folder) or an https:// link.'),
+  image_url: z.string().trim().min(1, 'Enter an image path or URL.').regex(/^(\/|https:\/\/)/, 'Use a path starting with / (an image in the website’s public folder) or an https:// link.')
+    .refine((value) => !isPageLink(value), PAGE_LINK_MESSAGE),
   image_alt: optionalText(300),
   curriculum: z.array(moduleSchema).max(60),
   sort_order: z.coerce.number().int('Use a whole number.').min(0).max(100000),

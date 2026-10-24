@@ -99,7 +99,7 @@ export function CourseForm({ action, course, categories, publicSiteUrl, submitLa
             }} />
           </Field>
         </div>
-        <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded border border-line bg-soft text-center text-xs text-muted">
+        <div className="flex aspect-4/3 items-center justify-center overflow-hidden rounded border border-line bg-soft text-center text-xs text-muted">
           {/* eslint-disable-next-line @next/next/no-img-element -- previews arbitrary admin-entered URLs */}
           {previewSrc ? <img src={previewSrc} alt="Image preview" className="h-full w-full object-cover" /> : 'Image preview'}
         </div>

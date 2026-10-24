@@ -11,4 +11,6 @@ export function getSupabaseEnv() {
   return { url: supabaseUrl!, key: supabaseKey! }
 }
 
-export const publicSiteUrl = (process.env.NEXT_PUBLIC_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000').replace(/\/$/, '')
+// Links shown in the admin (copy link, view on website, page addresses) always use the live domain unless
+// NEXT_PUBLIC_PUBLIC_SITE_URL points somewhere else on purpose.
+export const publicSiteUrl = (process.env.NEXT_PUBLIC_PUBLIC_SITE_URL?.trim() || 'https://naturalsbeautyacademypro.com').replace(/\/$/, '')

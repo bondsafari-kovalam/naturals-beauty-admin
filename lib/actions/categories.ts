@@ -45,11 +45,22 @@ export async function deleteCategory(id: string) {
   if (!category) redirect('/categories?error=Category%20not%20found%20or%20not%20permitted')
 
   // Courses store the category name, so deleting one that is still in use would orphan those courses.
-  const { count } = await admin.supabase.from('courses').select('id', { count: 'exact', head: true }).eq('category', category.name)
+  // GET with limit(0) instead of HEAD: HEAD responses hide errors, which would skip this check.
+  const { count, error: countError } = await admin.supabase.from('courses').select('id', { count: 'exact' }).limit(0).eq('category', category.name)
+  if (countError) redirect(`/categories?error=${encodeURIComponent(`Could not check which courses use this category: ${countError.message}`)}`)
   if (count) redirect(`/categories?error=${encodeURIComponent(`“${category.name}” is used by ${count} course${count === 1 ? '' : 's'}. Move ${count === 1 ? 'it' : 'them'} to another category first.`)}`)
 
-  const { error } = await admin.supabase.from('course_categories').delete().eq('id', id)
+  // select() returns the deleted rows: Row Level Security can silently delete nothing without an error.
+  const { data: deleted, error } = await admin.supabase.from('course_categories').delete().eq('id', id).select('id')
   revalidateCategoryPages()
+  if (error) {
+    console.error(`Category delete failed (${error.code}): ${error.message}`)
+    redirect(`/categories?error=${encodeURIComponent(error.message)}`)
+  }
+  if (!deleted?.length) {
+    console.error(`Category delete removed no rows for ${id}: the database did not allow it (check admin_users and the course_categories policies).`)
+    redirect(`/categories?error=${encodeURIComponent('The database did not delete this category. Your account may not have permission. Ask the owner to check admin_users in Supabase.')}`)
+  }
   await revalidatePublicSite()
-  redirect(error ? `/categories?error=${encodeURIComponent(error.message)}` : '/categories?saved=deleted')
+  redirect('/categories?saved=deleted')
 }
