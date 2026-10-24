@@ -3,9 +3,10 @@
 import { startTransition, useActionState, useState } from 'react'
 import { slugify, type CourseRow } from '@/lib/courses'
 import type { CourseFormState } from '@/lib/actions/courses'
-import { Alert, Card, Field, SubmitButton, inputClass } from '@/components/ui'
+import { Card, Field, SubmitButton, inputClass } from '@/components/ui'
 import { compressImage } from '@/lib/compress-image'
 import { CurriculumEditor } from './curriculum-editor'
+import { FormErrorSummary } from '@/components/form-error-summary'
 
 type Props = {
   action: (prev: CourseFormState, formData: FormData) => Promise<CourseFormState>
@@ -40,7 +41,7 @@ export function CourseForm({ action, course, categories, publicSiteUrl, submitLa
       // A manual call must run inside a transition, or `pending` never updates (React warns about this).
       startTransition(() => formAction(formData))
     }} className="flex flex-col gap-6" noValidate>
-      {state.error && <Alert tone="error">{state.error}</Alert>}
+      <FormErrorSummary message={state.error} fieldErrors={state.fieldErrors} />
 
       <Card className="grid gap-5 p-5 sm:p-6 md:grid-cols-2">
         <div className="md:col-span-2">

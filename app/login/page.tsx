@@ -25,7 +25,7 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
         {/* Form side */}
         <section className="flex flex-col justify-center px-6 py-10 sm:px-12 lg:py-16">
           {/* Logo moves to the brand panel on large screens. */}
-          <Image src="/naturals-beauty-academy-logo.png" alt="Alappuzha Naturals Beauty Academy" width={1435} height={817} sizes="160px" priority className="mb-8 h-auto w-40 lg:hidden" />
+          <Image src="/naturals-asap-logo.png" alt="Alappuzha Naturals Beauty Academy, in partnership with ASAP Kerala" width={900} height={527} sizes="160px" priority className="mb-8 h-auto w-40 lg:hidden" />
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Admin portal</p>
           <h1 className="mt-2 font-display text-4xl text-ink">Welcome <em className="text-brand">back.</em></h1>
           <p className="mt-2 text-sm text-muted">Sign in to manage courses, enquiries and site content.</p>
@@ -46,7 +46,7 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
         <aside className="relative order-first hidden flex-col items-center justify-center overflow-hidden bg-linear-to-br from-lavender via-soft to-[#efe2f5] p-12 lg:flex">
           <div aria-hidden className="absolute -right-24 -top-24 size-72 rounded-full bg-brand/10" />
           <div aria-hidden className="absolute -bottom-28 -left-20 size-80 rounded-full border-28 border-brand/5" />
-          <Image src="/naturals-beauty-academy-logo.png" alt="Alappuzha Naturals Beauty Academy" width={1435} height={817} sizes="380px" priority className="relative h-auto w-full max-w-sm" />
+          <Image src="/naturals-asap-logo.png" alt="Alappuzha Naturals Beauty Academy, in partnership with ASAP Kerala" width={900} height={527} sizes="380px" priority className="relative h-auto w-full max-w-sm" />
           <div className="relative mt-10 h-px w-24 bg-champagne" />
           <p className="relative mt-5 text-center font-display text-lg italic text-brand-deep">Shaping beauty professionals in Alappuzha</p>
         </aside>

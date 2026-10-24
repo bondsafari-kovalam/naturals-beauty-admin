@@ -6,6 +6,7 @@ import { deleteBlogPost, setBlogPostPublished } from '@/lib/actions/blog'
 import { effectiveStatus, formatDate, imageSrc, statusTone, type BlogPostRow } from '@/lib/blog'
 import { publicSiteUrl } from '@/lib/supabase/env'
 import { Alert, Badge, Card, EmptyState, PageHeader, Pagination, buttonClass, inputClass } from '@/components/ui'
+import { FilterForm } from '@/components/filter-form'
 import { ConfirmButton } from '@/components/confirm-button'
 
 export const metadata: Metadata = { title: 'Blog' }
@@ -88,7 +89,7 @@ export default async function BlogAdminPage({ searchParams }: PageProps<'/blog'>
       </Card>
     )}
 
-    <form className="mb-4 mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_190px_150px_140px_auto]" role="search">
+    <FilterForm className="mb-4 mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_190px_150px_140px_auto]">
       <label className="sr-only" htmlFor="q">Search by title</label>
       <input id="q" name="q" defaultValue={q} placeholder="Search by title" className={inputClass} />
       <label className="sr-only" htmlFor="category">Category</label>
@@ -105,7 +106,7 @@ export default async function BlogAdminPage({ searchParams }: PageProps<'/blog'>
         <option value="newest">Newest first</option><option value="oldest">Oldest first</option>
       </select>
       <div className="flex gap-2"><button type="submit" className={buttonClass('secondary')}>Filter</button>{filtered && <Link href="/blog" className={buttonClass('ghost')}>Clear</Link>}</div>
-    </form>
+    </FilterForm>
 
     {!list.error && posts.length === 0
       ? <EmptyState title={filtered ? 'No posts match these filters.' : 'No blog posts yet.'}>{filtered ? <Link className="text-brand underline" href="/blog">Clear filters</Link> : <Link className="text-brand underline" href="/blog/new">Write your first article</Link>}</EmptyState>

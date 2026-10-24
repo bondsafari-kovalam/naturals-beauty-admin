@@ -5,10 +5,11 @@ import { useActionState, useEffect, useRef, useState, type ReactNode } from 'rea
 import { checkBlogSlug, type SlugCheck } from '@/lib/actions/blog'
 import type { CourseFormState } from '@/lib/actions/courses'
 import { DEFAULT_AUTHOR, effectiveStatus, formatDate, slugify, statusTone, toIstInput, type BlogPostRow } from '@/lib/blog'
-import { Alert, Badge, Card, Field, buttonClass, inputClass } from '@/components/ui'
+import { Badge, Card, Field, buttonClass, inputClass } from '@/components/ui'
 import { BlogPreview } from './blog-preview'
 import { ImageField } from './image-field'
 import { RichTextEditor } from './rich-text-editor'
+import { FormErrorSummary } from '@/components/form-error-summary'
 
 type Props = {
   action: (prev: CourseFormState, formData: FormData) => Promise<CourseFormState>
@@ -77,7 +78,7 @@ export function BlogForm({ action, post, categories, knownTags, publicSiteUrl }:
 
   return (
     <form action={formAction} onChange={touch} onSubmit={() => { submitting.current = true }} className="flex flex-col gap-6 pb-28" noValidate>
-      {state.error && <Alert tone="error">{state.error}</Alert>}
+      <FormErrorSummary message={state.error} fieldErrors={state.fieldErrors} />
 
       <Section title="Basic information" description="What the post is about and where it lives on the website.">
         <div className="md:col-span-2">

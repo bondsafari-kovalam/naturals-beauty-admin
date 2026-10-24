@@ -35,7 +35,7 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 
 export function Field({ label, name, hint, error, required, children }: { label: string; name: string; hint?: ReactNode; error?: string; required?: boolean; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5" data-required-field={required ? name : undefined}>
       <label htmlFor={name} className="text-xs font-bold uppercase tracking-wider text-ink">
         {label} {required ? <span className="text-brand">*</span> : <span className="font-normal normal-case tracking-normal text-muted">(optional)</span>}
       </label>

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/dal'
 import { ENQUIRY_STATUSES, formatDateTime, statusTone, type EnquiryRow } from '@/lib/enquiries'
 import { Alert, Badge, Card, EmptyState, PageHeader, Pagination, buttonClass, inputClass } from '@/components/ui'
+import { FilterForm } from '@/components/filter-form'
 
 export const metadata: Metadata = { title: 'Enquiries' }
 
@@ -35,7 +36,7 @@ export default async function EnquiriesPage({ searchParams }: PageProps<'/enquir
         {error && <Alert tone="error">Could not load enquiries: {error.message}{error.code === 'PGRST205' ? ' — run 001_enquiries.sql in the Supabase SQL Editor.' : ''}</Alert>}
       </div>
 
-      <form className="mb-4 grid gap-3 sm:grid-cols-[1fr_180px_auto]" role="search">
+      <FilterForm className="mb-4 grid gap-3 sm:grid-cols-[1fr_180px_auto]">
         <label className="sr-only" htmlFor="q">Search enquiries</label>
         <input id="q" name="q" defaultValue={q} placeholder="Search name, email or phone" className={inputClass} />
         <label className="sr-only" htmlFor="status">Status</label>
@@ -44,7 +45,7 @@ export default async function EnquiriesPage({ searchParams }: PageProps<'/enquir
           {ENQUIRY_STATUSES.map((s) => <option key={s} value={s}>{s[0].toUpperCase() + s.slice(1)}</option>)}
         </select>
         <button type="submit" className={buttonClass('secondary')}>Filter</button>
-      </form>
+      </FilterForm>
 
       {!error && enquiries.length === 0 ? (
         <EmptyState title={q || status ? 'No enquiries match these filters.' : 'No enquiries yet.'}>{q || status ? <Link className="text-brand underline" href="/enquiries">Clear filters</Link> : 'New contact-form messages will appear here.'}</EmptyState>

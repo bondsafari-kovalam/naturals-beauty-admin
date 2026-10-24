@@ -6,6 +6,7 @@ import { deleteRegistration, setRegistrationStatus } from '@/lib/actions/worksho
 import { REGISTRATION_STATUSES, campaignLabel, registrationStatusTone, type RegistrationRow } from '@/lib/workshops'
 import { Alert, Badge, Card, EmptyState, PageHeader, Pagination, buttonClass, inputClass } from '@/components/ui'
 import { ConfirmButton } from '@/components/confirm-button'
+import { FilterForm } from '@/components/filter-form'
 
 export const metadata: Metadata = { title: 'Workshop registrations' }
 
@@ -51,7 +52,7 @@ export default async function RegistrationsPage({ searchParams }: PageProps<'/wo
       actions={<a href={exportHref} className={buttonClass('secondary')}>Export CSV</a>} />
     {list.error && <div className="mb-4"><Alert tone="error">Could not load registrations: {list.error.message}{list.error.code === 'PGRST205' ? ' — run 010_workshop_campaigns.sql in Supabase.' : ''}</Alert></div>}
 
-    <form className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_260px_170px_auto]" role="search">
+    <FilterForm className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_260px_170px_auto]">
       <label className="sr-only" htmlFor="q">Search by name or phone</label>
       <input id="q" name="q" defaultValue={q} placeholder="Search by name or phone" className={inputClass} />
       <label className="sr-only" htmlFor="workshop">Workshop</label>
@@ -65,7 +66,7 @@ export default async function RegistrationsPage({ searchParams }: PageProps<'/wo
         {REGISTRATION_STATUSES.map((s) => <option key={s} value={s}>{s[0].toUpperCase() + s.slice(1)}</option>)}
       </select>
       <div className="flex gap-2"><button type="submit" className={buttonClass('secondary')}>Filter</button>{filtered && <Link href="/workshops/registrations" className={buttonClass('ghost')}>Clear</Link>}</div>
-    </form>
+    </FilterForm>
 
     {!list.error && rows.length === 0
       ? <EmptyState title={filtered ? 'No registrations match these filters.' : 'No registrations yet.'}>{filtered ? <Link className="text-brand underline" href="/workshops/registrations">Clear filters</Link> : 'Publish a workshop and share its campaign link to start receiving registrations.'}</EmptyState>

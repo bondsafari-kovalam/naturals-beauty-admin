@@ -12,5 +12,9 @@ export function getSupabaseEnv() {
 }
 
 // Links shown in the admin (copy link, view on website, page addresses) always use the live domain unless
-// NEXT_PUBLIC_PUBLIC_SITE_URL points somewhere else on purpose.
-export const publicSiteUrl = (process.env.NEXT_PUBLIC_PUBLIC_SITE_URL?.trim() || 'https://naturalsbeautyacademypro.com').replace(/\/$/, '')
+// NEXT_PUBLIC_PUBLIC_SITE_URL points somewhere else on purpose. A localhost value is ignored on Vercel, so a
+// variable copied from .env.local can never put http://localhost:3000 links in the live admin.
+const LIVE_SITE_URL = 'https://naturalsbeautyacademypro.com'
+const configuredSiteUrl = 'https://naturalsbeautyacademypro.com'?.trim()
+const isLocalUrl = (url: string) => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(url)
+export const publicSiteUrl = (configuredSiteUrl && !(process.env.VERCEL && isLocalUrl(configuredSiteUrl)) ? configuredSiteUrl : LIVE_SITE_URL).replace(/\/$/, '')

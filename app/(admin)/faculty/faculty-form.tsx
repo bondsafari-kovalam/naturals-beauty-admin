@@ -2,9 +2,10 @@
 
 import { startTransition, useActionState, useEffect, useState } from 'react'
 import type { CourseFormState } from '@/lib/actions/courses'
-import { Alert, Card, Field, SubmitButton, inputClass } from '@/components/ui'
+import { Card, Field, SubmitButton, inputClass } from '@/components/ui'
 import { compressImage } from '@/lib/compress-image'
 import { FACULTY_SECTION_LABELS, FACULTY_SECTIONS, type FacultyRow } from '@/lib/faculty'
+import { FormErrorSummary } from '@/components/form-error-summary'
 
 type Props = { action: (prev: CourseFormState, formData: FormData) => Promise<CourseFormState>; faculty?: FacultyRow; publicSiteUrl: string; submitLabel: string }
 
@@ -31,7 +32,7 @@ export function FacultyForm({ action, faculty, publicSiteUrl, submitLabel }: Pro
     formData.set('image_file', selectedImage)
     startTransition(() => formAction(formData))
   }} className="flex flex-col gap-6" noValidate>
-    {state.error && <Alert tone="error">{state.error}</Alert>}
+    <FormErrorSummary message={state.error} fieldErrors={state.fieldErrors} />
     <Card className="grid gap-5 p-5 sm:p-6 md:grid-cols-2">
       <Field label="Name" name="name" required error={errors.name}><input id="name" name="name" className={inputClass} defaultValue={v?.name ?? faculty?.name ?? ''} {...invalid('name')} /></Field>
       <Field label="Role" name="role" required error={errors.role}><input id="role" name="role" className={inputClass} placeholder="e.g. Makeup Artistry Trainer" defaultValue={v?.role ?? faculty?.role ?? ''} {...invalid('role')} /></Field>

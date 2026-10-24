@@ -5,7 +5,8 @@ import type { CourseFormState } from '@/lib/actions/courses'
 import { WORKSHOP_STATUSES, type WorkshopRow } from '@/lib/workshops'
 import { slugify } from '@/lib/courses'
 import { CopyButton } from '@/components/copy-button'
-import { Alert, Card, Field, SubmitButton, inputClass } from '@/components/ui'
+import { Card, Field, SubmitButton, inputClass } from '@/components/ui'
+import { FormErrorSummary } from '@/components/form-error-summary'
 
 type Props = { action: (prev: CourseFormState, formData: FormData) => Promise<CourseFormState>; workshop?: WorkshopRow; publicSiteUrl: string; submitLabel: string }
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024
@@ -39,6 +40,9 @@ async function compressImage(file: File) {
   throw new Error('This image could not be compressed below 5 MB.')
 }
 
+// Errors whose key is not the id of the input to jump to.
+const ERROR_FIELD_IDS = { image_url: 'image_file', trainer: 'trainer_image' }
+
 export function WorkshopForm({ action, workshop, publicSiteUrl, submitLabel }: Props) {
   const [state, formAction, pending] = useActionState(action, {})
   const errors = state.fieldErrors ?? {}; const v = state.values; const image = v?.image_url ?? workshop?.image_url ?? ''; const [imagePreview, setImagePreview] = useState(''); const [imageError, setImageError] = useState(''); const preview = imagePreview || (image.startsWith('/') ? `${publicSiteUrl}${image}` : image)
@@ -56,7 +60,7 @@ export function WorkshopForm({ action, workshop, publicSiteUrl, submitLabel }: P
     formData.set('image_file', selectedImage)
     formAction(formData)
   }} className="flex flex-col gap-6" noValidate>
-    {state.error && <Alert tone="error">{state.error}</Alert>}
+    <FormErrorSummary message={state.error} fieldErrors={state.fieldErrors} fieldIds={ERROR_FIELD_IDS} />
     <Card className="grid gap-5 p-5 sm:p-6 md:grid-cols-2">
       <div className="md:col-span-2"><Field label="Title" name="title" required error={errors.title}><input id="title" name="title" className={inputClass} value={title} onChange={(event) => { setTitle(event.target.value); if (!slugEdited) setSlug(slugify(event.target.value)) }} {...invalid('title')} /></Field></div>
       <div className="md:col-span-2"><Field label="Campaign URL" name="slug" required error={errors.slug} hint={`Share this link in Instagram and Facebook posts: ${campaignUrl}`}>

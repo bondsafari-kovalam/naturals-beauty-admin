@@ -6,6 +6,7 @@ import { setCoursePublished } from '@/lib/actions/courses'
 import type { CourseRow } from '@/lib/courses'
 import { loadCategoryNames } from '@/lib/categories'
 import { Alert, Badge, Card, EmptyState, PageHeader, Pagination, buttonClass, inputClass } from '@/components/ui'
+import { FilterForm } from '@/components/filter-form'
 import { ConfirmButton } from '@/components/confirm-button'
 
 export const metadata: Metadata = { title: 'Courses' }
@@ -50,7 +51,7 @@ export default async function CoursesPage({ searchParams }: PageProps<'/courses'
         {error && <Alert tone="error">Could not load courses: {error.message}{error.code === 'PGRST205' ? ' — run 002_courses.sql in the Supabase SQL Editor.' : ''}</Alert>}
       </div>
 
-      <form className="mb-4 grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]" role="search">
+      <FilterForm className="mb-4 grid gap-3 sm:grid-cols-[1fr_200px_160px_auto]">
         <label className="sr-only" htmlFor="q">Search courses</label>
         <input id="q" name="q" defaultValue={q} placeholder="Search title or slug" className={inputClass} />
         <label className="sr-only" htmlFor="category">Category</label>
@@ -65,7 +66,7 @@ export default async function CoursesPage({ searchParams }: PageProps<'/courses'
           <option value="draft">Draft</option>
         </select>
         <button type="submit" className={buttonClass('secondary')}>Filter</button>
-      </form>
+      </FilterForm>
 
       {!error && courses.length === 0 ? (
         <EmptyState title={q || category || status ? 'No courses match these filters.' : 'No courses yet.'}>

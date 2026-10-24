@@ -27,7 +27,7 @@ export function AdminNav({ email, signOutAction }: { email: string; signOutActio
     <aside className="border-b border-line bg-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-60 lg:border-b-0 lg:border-r">
       <div className="flex items-center justify-between px-5 py-4 lg:block lg:py-6">
         <Link href="/" className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-2">
-          <Image src="/naturals-beauty-academy-logo.png" alt="Alappuzha Naturals Beauty Academy" width={1435} height={817} sizes="144px" priority className="h-11 w-auto lg:h-auto lg:w-36" />
+          <Image src="/naturals-asap-logo.png" alt="Alappuzha Naturals Beauty Academy, in partnership with ASAP Kerala" width={900} height={527} sizes="144px" priority className="h-11 w-auto lg:h-auto lg:w-36" />
           <span className="font-display text-2xl text-ink">Admin</span>
         </Link>
         <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="admin-menu" className="rounded border border-line px-3 py-2 text-xs font-bold uppercase tracking-wider text-brand-deep lg:hidden">
