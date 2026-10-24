@@ -30,7 +30,9 @@ under `supabase/migrations/`.
 Requires **Node.js 22 or later**.
 
 1. In Supabase SQL Editor, run (in order) from `naturals-beauty-web/supabase/migrations/`:
-     `001_enquiries.sql`, `002_courses.sql`, `003_courses_seed.sql`, `004_admin_auth.sql`, `005_course_images_storage.sql`, `006_faculty.sql`, `007_workshops.sql`, `008_course_categories.sql`, `009_blog.sql`, `010_workshop_campaigns.sql` and `011_testimonials.sql`.
+     `001_enquiries.sql`, `002_courses.sql`, `003_courses_seed.sql`, `004_admin_auth.sql`, `005_course_images_storage.sql`, `006_faculty.sql`, `007_workshops.sql`, `008_course_categories.sql`, `009_blog.sql`, `010_workshop_campaigns.sql`, `011_testimonials.sql` and `012_workshop_registration_hardening.sql`
+   (then `013_revoke_public_workshop_registration.sql` once the website uses the new registration secret; see the steps at the top of 012),
+   then `014_enquiry_hardening.sql` (and `015_revoke_public_enquiry_insert.sql` after a test enquiry works).
 2. Create the first admin (instructions at the bottom of `004_admin_auth.sql`):
    Authentication → Users → Add user (auto-confirm) → run the `insert into public.admin_users …` statement.
 3. Authentication → Sign In / Providers → turn **off** “Allow new users to sign up”.
