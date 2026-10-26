@@ -6,7 +6,8 @@ import { buttonClass } from './ui'
 
 // A submit button that asks for confirmation in a modal first (used for delete / unpublish).
 // Must be rendered inside the <form> it submits.
-export function ConfirmButton({ message, children, variant = 'danger' }: { message: string; children: ReactNode; variant?: 'danger' | 'secondary' | 'primary' }) {
+// `className` restyles only the trigger (e.g. the text-link Sign out); the dialog is unchanged.
+export function ConfirmButton({ message, children, variant = 'danger', className }: { message: string; children: ReactNode; variant?: 'danger' | 'secondary' | 'primary'; className?: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   const { pending } = useFormStatus()
@@ -20,7 +21,7 @@ export function ConfirmButton({ message, children, variant = 'danger' }: { messa
 
   return (
     <>
-      <button type="button" className={buttonClass(variant)} onClick={() => dialogRef.current?.showModal()}>
+      <button type="button" className={className ?? buttonClass(variant)} onClick={() => dialogRef.current?.showModal()}>
         {children}
       </button>
       <dialog

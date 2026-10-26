@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { ConfirmButton } from './confirm-button'
 
 const items: { href: string; label: string; also?: string[] }[] = [
   { href: '/', label: 'Dashboard' },
@@ -46,7 +47,7 @@ export function AdminNav({ email, signOutAction }: { email: string; signOutActio
         <div className="mt-6 border-t border-line px-3 pt-4 lg:absolute lg:inset-x-3 lg:bottom-4">
           <p className="truncate text-xs text-muted" title={email}>{email}</p>
           <form action={signOutAction}>
-            <button type="submit" className="mt-2 text-xs font-bold uppercase tracking-wider text-brand hover:text-brand-deep">Sign out</button>
+            <ConfirmButton variant="primary" message="Sign out of the admin panel?" className="mt-2 text-xs font-bold uppercase tracking-wider text-brand hover:text-brand-deep">Sign out</ConfirmButton>
           </form>
         </div>
       </div>
