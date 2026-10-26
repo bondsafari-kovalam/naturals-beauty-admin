@@ -138,14 +138,14 @@ export default async function BlogAdminPage({ searchParams }: PageProps<'/blog'>
               <td className="px-4 py-3 text-muted">{post.status === 'draft' ? '—' : formatDate(post.published_at, live === 'scheduled')}</td>
               <td className="px-4 py-3 text-muted">{formatDate(post.updated_at)}</td>
               <td className="px-4 py-3"><div className="flex justify-end gap-2">
-                <Link href={`/blog/${post.id}`} className={buttonClass('secondary', 'min-h-8 px-3')}>Edit</Link>
+                {/* Editing opens from the post title. */}
+                <form action={deleteBlogPost.bind(null, post.id)}><ConfirmButton variant="danger" message={`Delete “${post.title}”?`}>Delete</ConfirmButton></form>
                 <Link href={`/blog/${post.id}/preview`} className={buttonClass('ghost', 'min-h-8 px-3')}>Preview</Link>
                 <form action={setBlogPostPublished.bind(null, post.id, post.status === 'draft')}>
                   {post.status === 'draft'
                     ? <button type="submit" className={buttonClass('primary', 'min-h-8 px-3')}>Publish</button>
                     : <ConfirmButton variant="secondary" message={`Unpublish “${post.title}”? It moves to drafts and disappears from the website.`}>Unpublish</ConfirmButton>}
                 </form>
-                <form action={deleteBlogPost.bind(null, post.id)}><ConfirmButton variant="danger" message={`Delete “${post.title}”?`}>Delete</ConfirmButton></form>
               </div></td>
             </tr>
           })}</tbody>

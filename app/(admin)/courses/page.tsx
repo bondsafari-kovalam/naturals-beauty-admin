@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/dal'
-import { setCoursePublished } from '@/lib/actions/courses'
+import { deleteCourse, setCoursePublished } from '@/lib/actions/courses'
 import type { CourseRow } from '@/lib/courses'
 import { loadCategoryNames } from '@/lib/categories'
 import { Alert, Badge, Card, EmptyState, PageHeader, Pagination, buttonClass, inputClass } from '@/components/ui'
@@ -88,7 +88,8 @@ export default async function CoursesPage({ searchParams }: PageProps<'/courses'
                   <td className="px-4 py-3">{course.is_published ? <Badge tone="success">Published</Badge> : <Badge tone="warning">Draft</Badge>}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
-                      <Link href={`/courses/${course.id}`} className={buttonClass('secondary', 'min-h-8 px-3')}>Edit</Link>
+                      {/* Editing opens from the course title. */}
+                      <form action={deleteCourse.bind(null, course.id)}><ConfirmButton variant="danger" message={`Permanently delete “${course.title}”? This cannot be undone.`}>Delete</ConfirmButton></form>
                       <form action={setCoursePublished.bind(null, course.id, !course.is_published)}>
                         {course.is_published
                           ? <ConfirmButton variant="secondary" message={`Unpublish “${course.title}”? It will disappear from the website.`}>Unpublish</ConfirmButton>
